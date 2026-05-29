@@ -46,6 +46,31 @@ export default function NMSQueueUI() {
     pit: 2
   }
 
+  const resetRegulerFlow = () => {
+    setShowRegulerQrScan(false)
+    setShowRegulerEngineInput(false)
+    setShowRegulerDataNotFound(false)
+    setRegulerEngineNumber('')
+  }
+
+  const openRegulerQrScan = () => {
+    setShowRegulerQrScan(true)
+    setShowRegulerEngineInput(false)
+    setShowRegulerDataNotFound(false)
+  }
+
+  const openRegulerEngineInput = () => {
+    setShowRegulerQrScan(false)
+    setShowRegulerEngineInput(true)
+    setShowRegulerDataNotFound(false)
+  }
+
+  const openRegulerDataNotFound = () => {
+    setShowRegulerQrScan(false)
+    setShowRegulerEngineInput(false)
+    setShowRegulerDataNotFound(true)
+  }
+
   const menu = [
     {
       id: 'booking',
@@ -144,10 +169,7 @@ export default function NMSQueueUI() {
 
                 if (item.id === 'reguler') {
                   setShowRegulerPopup(true)
-                  setShowRegulerQrScan(false)
-                  setShowRegulerEngineInput(false)
-                  setShowRegulerDataNotFound(false)
-                  setRegulerEngineNumber('')
+                  resetRegulerFlow()
                 }
               }}
               className="group relative w-[290px] h-[340px] rounded-[40px] bg-white shadow-xl cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl hover:border-orange-400 hover:bg-orange-500 border border-gray-200"
@@ -713,10 +735,7 @@ export default function NMSQueueUI() {
               <button
                 onClick={() => {
                   setShowRegulerPopup(false)
-                  setShowRegulerQrScan(false)
-                  setShowRegulerEngineInput(false)
-                  setShowRegulerDataNotFound(false)
-                  setRegulerEngineNumber('')
+                  resetRegulerFlow()
                 }}
                 className="absolute top-5 right-5 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-all text-gray-500 text-xl font-bold"
               >
@@ -737,10 +756,7 @@ export default function NMSQueueUI() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div
-                      onClick={() => {
-                        setShowRegulerQrScan(true)
-                        setShowRegulerDataNotFound(false)
-                      }}
+                      onClick={openRegulerQrScan}
                       className="group cursor-pointer border border-gray-200 rounded-[28px] p-8 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
                     >
                       <div className="flex flex-col items-center text-center">
@@ -759,10 +775,7 @@ export default function NMSQueueUI() {
                     </div>
 
                     <div
-                      onClick={() => {
-                        setShowRegulerEngineInput(true)
-                        setShowRegulerDataNotFound(false)
-                      }}
+                      onClick={openRegulerEngineInput}
                       className="group cursor-pointer border border-gray-200 rounded-[28px] p-8 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
                     >
                       <div className="flex flex-col items-center text-center">
@@ -811,10 +824,7 @@ export default function NMSQueueUI() {
                     </button>
 
                     <button
-                      onClick={() => {
-                        setShowRegulerQrScan(false)
-                        setShowRegulerDataNotFound(true)
-                      }}
+                      onClick={openRegulerDataNotFound}
                       className="px-5 py-5 rounded-2xl bg-orange-100 hover:bg-orange-500 text-orange-600 hover:text-white font-bold transition-all"
                     >
                       Simulasi QR Tidak Ditemukan
@@ -844,20 +854,14 @@ export default function NMSQueueUI() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button
-                      onClick={() => {
-                        setShowRegulerDataNotFound(false)
-                        setShowRegulerEngineInput(true)
-                      }}
+                      onClick={openRegulerEngineInput}
                       className="px-5 py-5 rounded-2xl bg-orange-100 hover:bg-orange-500 text-orange-600 hover:text-white font-bold transition-all"
                     >
                       Input Nomor Mesin
                     </button>
 
                     <button
-                      onClick={() => {
-                        setShowRegulerDataNotFound(false)
-                        setShowRegulerQrScan(true)
-                      }}
+                      onClick={openRegulerQrScan}
                       className="px-5 py-5 rounded-2xl bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-700 font-bold transition-all"
                     >
                       Kembali
@@ -891,10 +895,7 @@ export default function NMSQueueUI() {
 
                   <div className="flex items-center justify-center gap-5">
                     <button
-                      onClick={() => {
-                        setShowRegulerEngineInput(false)
-                        setRegulerEngineNumber('')
-                      }}
+                      onClick={resetRegulerFlow}
                       className="px-8 py-4 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-all"
                     >
                       Kembali
