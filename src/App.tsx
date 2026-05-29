@@ -1,7 +1,9 @@
 import { useState } from 'react'
 
+type Language = 'id' | 'en'
+
 export default function NMSQueueUI() {
-  const [language, setLanguage] = useState('id')
+  const [language, setLanguage] = useState<Language>('id')
   const [showBookingPopup, setShowBookingPopup] = useState(false)
   const [showBookingCodeInput, setShowBookingCodeInput] = useState(false)
   const [showBookingDetail, setShowBookingDetail] = useState(false)
@@ -121,7 +123,7 @@ export default function NMSQueueUI() {
 
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-14 relative z-10">
-          {menu.map((item, index) => (
+          {menu.map((item) => (
             <div
               key={item.id}
               onClick={() => {
@@ -333,6 +335,14 @@ export default function NMSQueueUI() {
                   </div>
                 )}
 
+                {phoneNumberError && (
+                  <div className="mb-6 text-center">
+                    <div className="inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-500 px-5 py-3 rounded-2xl font-semibold text-sm">
+                      ⚠️ {phoneNumberError}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-center gap-5">
                   <button
                     onClick={() => {
@@ -346,6 +356,15 @@ export default function NMSQueueUI() {
 
                   <button
                     onClick={() => {
+                      if (!phoneNumber.trim()) {
+                        setPhoneNumberError(
+                          language === 'id'
+                            ? 'Input nomor handphone terlebih dahulu'
+                            : 'Please input phone number first'
+                        )
+                        return
+                      }
+
                       if (
                         countryCode === '+62' &&
                         phoneNumber === '81703872436'
