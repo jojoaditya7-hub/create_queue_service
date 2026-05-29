@@ -1,7 +1,9 @@
 import { useState } from 'react'
 
+type Language = 'id' | 'en'
+
 export default function NMSQueueUI() {
-  const [language, setLanguage] = useState('id')
+  const [language, setLanguage] = useState<Language>('id')
   const [showBookingPopup, setShowBookingPopup] = useState(false)
   const [showBookingCodeInput, setShowBookingCodeInput] = useState(false)
   const [showBookingDetail, setShowBookingDetail] = useState(false)
@@ -13,6 +15,7 @@ export default function NMSQueueUI() {
   const [countryCode, setCountryCode] = useState('+62')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [phoneNumberError, setPhoneNumberError] = useState('')
+  const [showRegulerPopup, setShowRegulerPopup] = useState(false)
 
   const translations = {
     id: {
@@ -121,12 +124,13 @@ export default function NMSQueueUI() {
 
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-14 relative z-10">
-          {menu.map((item, index) => (
+          {menu.map((item) => (
             <div
               key={item.id}
               onClick={() => {
                 if (item.id === 'booking') {
                   setShowBookingPopup(true)
+                  setShowRegulerPopup(false)
                   setShowBookingCodeInput(false)
                   setShowPhoneNumberInput(false)
                   setShowBookingDetail(false)
@@ -134,6 +138,20 @@ export default function NMSQueueUI() {
                   setShowQueueNumberPopup(false)
                   setBookingCode('')
                   setBookingCodeError('')
+                }
+
+                if (item.id === 'reguler') {
+                  setShowRegulerPopup(true)
+                  setShowBookingPopup(false)
+                  setShowBookingCodeInput(false)
+                  setShowPhoneNumberInput(false)
+                  setShowBookingDetail(false)
+                  setShowBookingNotFound(false)
+                  setShowQueueNumberPopup(false)
+                  setBookingCode('')
+                  setBookingCodeError('')
+                  setPhoneNumber('')
+                  setPhoneNumberError('')
                 }
               }}
               className="group relative w-[290px] h-[340px] rounded-[40px] bg-white shadow-xl cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl hover:border-orange-400 hover:bg-orange-500 border border-gray-200"
@@ -186,6 +204,78 @@ export default function NMSQueueUI() {
             {t.info}
           </div>
         </div>
+      {/* Reguler Popup */}
+        {showRegulerPopup && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999999] px-4">
+            <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-2xl p-10 relative animate-in fade-in zoom-in duration-300">
+              <button
+                onClick={() => setShowRegulerPopup(false)}
+                className="absolute top-5 right-5 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-all text-gray-500 text-xl font-bold"
+              >
+                ×
+              </button>
+
+              <div className="text-center mb-10">
+                <div className="text-7xl mb-5">🛵</div>
+
+                <div className="text-3xl font-black text-gray-700 mb-3">
+                  {language === 'id'
+                    ? 'Pilih Metode Antrian Reguler'
+                    : 'Select Regular Queue Method'}
+                </div>
+
+                <div className="text-gray-500 text-lg">
+                  {language === 'id'
+                    ? 'Silakan pilih metode input unit pelanggan'
+                    : 'Please select the customer unit input method'}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <button
+                  className="group cursor-pointer border border-gray-200 rounded-[28px] p-8 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                >
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-7xl mb-6 transition-all duration-300 group-hover:scale-110">
+                      ▣
+                    </div>
+
+                    <div className="text-2xl font-black text-gray-700 group-hover:text-white mb-3 transition-all">
+                      QR Code Unit
+                    </div>
+
+                    <div className="text-sm text-gray-500 group-hover:text-orange-100 leading-relaxed transition-all">
+                      {language === 'id'
+                        ? 'Scan QR Code pada unit kendaraan'
+                        : 'Scan the QR Code on the vehicle unit'}
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  className="group cursor-pointer border border-gray-200 rounded-[28px] p-8 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                >
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-7xl mb-6 transition-all duration-300 group-hover:scale-110">
+                      🔢
+                    </div>
+
+                    <div className="text-2xl font-black text-gray-700 group-hover:text-white mb-3 transition-all">
+                      Nomor Mesin
+                    </div>
+
+                    <div className="text-sm text-gray-500 group-hover:text-orange-100 leading-relaxed transition-all">
+                      {language === 'id'
+                        ? 'Input nomor mesin kendaraan pelanggan'
+                        : 'Input the customer vehicle engine number'}
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       {/* Booking Popup */}
         {showBookingPopup && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999999] px-4">
@@ -333,6 +423,14 @@ export default function NMSQueueUI() {
                   </div>
                 )}
 
+                {phoneNumberError && (
+                  <div className="mb-6 text-center">
+                    <div className="inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-500 px-5 py-3 rounded-2xl font-semibold text-sm">
+                      ⚠️ {phoneNumberError}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-center gap-5">
                   <button
                     onClick={() => {
@@ -346,6 +444,15 @@ export default function NMSQueueUI() {
 
                   <button
                     onClick={() => {
+                      if (!phoneNumber.trim()) {
+                        setPhoneNumberError(
+                          language === 'id'
+                            ? 'Input nomor handphone terlebih dahulu'
+                            : 'Please input phone number first'
+                        )
+                        return
+                      }
+
                       if (
                         countryCode === '+62' &&
                         phoneNumber === '81703872436'
