@@ -788,9 +788,28 @@ export default function NMSQueueUI() {
 
                   <div className="bg-gray-50 border border-gray-200 rounded-[28px] p-10 mb-8 text-center">
                     <div className="text-8xl mb-4">▣</div>
-                    <div className="text-gray-500 font-semibold">
+                    <div className="text-gray-500 font-semibold mb-6">
                       Area Scan QR Unit
                     </div>
+                    <button
+                      onClick={() => {
+                        setShowRegulerPopup(false)
+                        setShowRegulerQrScan(false)
+                        setShowRegulerEngineInput(false)
+                        setRegulerEngineNumber('')
+                        setShowBookingPopup(true)
+                        setShowBookingCodeInput(false)
+                        setShowPhoneNumberInput(false)
+                        setShowBookingDetail(true)
+                        setShowBookingNotFound(false)
+                        setShowQueueNumberPopup(false)
+                        setBookingCode('')
+                        setBookingCodeError('')
+                      }}
+                      className="px-8 py-4 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg transition-all"
+                    >
+                      Scan QR Unit
+                    </button>
                   </div>
 
                   <div className="flex items-center justify-center gap-5">
