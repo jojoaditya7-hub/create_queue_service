@@ -190,6 +190,10 @@ export default function NMSQueueUI() {
                 if (item.id === 'pit') {
                   setActiveQueueType('pitExpress')
                 }
+
+                if (item.id === 'pit') {
+                  setActiveQueueType('pitExpress')
+                }
               }}
               className="group relative w-[290px] h-[340px] rounded-[40px] bg-white shadow-xl cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl hover:border-orange-400 hover:bg-orange-500 border border-gray-200"
             >
@@ -858,6 +862,21 @@ export default function NMSQueueUI() {
                     </div>
                     <button
                       onClick={openRegulerBookingDetail}
+                      onClick={() => {
+                        setActiveQueueType('reguler')
+                        setShowRegulerPopup(false)
+                        setShowRegulerQrScan(false)
+                        setShowRegulerEngineInput(false)
+                        setRegulerEngineNumber('')
+                        setShowBookingPopup(true)
+                        setShowBookingCodeInput(false)
+                        setShowPhoneNumberInput(false)
+                        setShowBookingDetail(true)
+                        setShowBookingNotFound(false)
+                        setShowQueueNumberPopup(false)
+                        setBookingCode('')
+                        setBookingCodeError('')
+                      }}
                       className="px-8 py-4 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg transition-all"
                     >
                       Scan QR Unit
