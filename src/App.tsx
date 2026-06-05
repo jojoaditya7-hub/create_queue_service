@@ -17,6 +17,15 @@ export default function NMSQueueUI() {
   const [showRegulerQrScan, setShowRegulerQrScan] = useState(false)
   const [showRegulerEngineInput, setShowRegulerEngineInput] = useState(false)
   const [regulerEngineNumber, setRegulerEngineNumber] = useState('')
+  const [activeQueueType, setActiveQueueType] = useState<'booking' | 'reguler' | 'pitExpress'>('booking')
+
+  const queueNumbers = {
+    booking: 'B001',
+    reguler: 'R001',
+    pitExpress: 'P001'
+  }
+
+  const activeQueueNumber = queueNumbers[activeQueueType]
 
   const translations = {
     id: {
@@ -130,6 +139,7 @@ export default function NMSQueueUI() {
               key={item.id}
               onClick={() => {
                 if (item.id === 'booking') {
+                  setActiveQueueType('booking')
                   setShowBookingPopup(true)
                   setShowRegulerPopup(false)
                   setShowBookingCodeInput(false)
@@ -142,10 +152,15 @@ export default function NMSQueueUI() {
                 }
 
                 if (item.id === 'reguler') {
+                  setActiveQueueType('reguler')
                   setShowRegulerPopup(true)
                   setShowRegulerQrScan(false)
                   setShowRegulerEngineInput(false)
                   setRegulerEngineNumber('')
+                }
+
+                if (item.id === 'pit') {
+                  setActiveQueueType('pitExpress')
                 }
               }}
               className="group relative w-[290px] h-[340px] rounded-[40px] bg-white shadow-xl cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl hover:border-orange-400 hover:bg-orange-500 border border-gray-200"
@@ -657,7 +672,7 @@ export default function NMSQueueUI() {
 
                   <div className="bg-orange-500 rounded-[40px] py-10 px-8 shadow-2xl mb-10">
                     <div className="text-white text-8xl font-black tracking-[8px]">
-                      B-011
+                      {activeQueueNumber}
                     </div>
                   </div>
 
@@ -762,11 +777,11 @@ export default function NMSQueueUI() {
                         </div>
 
                         <div className="text-2xl font-black text-gray-700 group-hover:text-white mb-3 transition-all">
-                          Nomor Mesin
+                          No. Mesin / No. Polisi
                         </div>
 
                         <div className="text-sm text-gray-500 group-hover:text-orange-100 leading-relaxed transition-all">
-                          Input nomor mesin kendaraan pelanggan
+                          Input nomor mesin atau nomor polisi kendaraan pelanggan
                         </div>
                       </div>
                     </div>
@@ -793,6 +808,7 @@ export default function NMSQueueUI() {
                     </div>
                     <button
                       onClick={() => {
+                        setActiveQueueType('reguler')
                         setShowRegulerPopup(false)
                         setShowRegulerQrScan(false)
                         setShowRegulerEngineInput(false)
