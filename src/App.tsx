@@ -17,6 +17,39 @@ export default function NMSQueueUI() {
   const [showRegulerQrScan, setShowRegulerQrScan] = useState(false)
   const [showRegulerEngineInput, setShowRegulerEngineInput] = useState(false)
   const [regulerEngineNumber, setRegulerEngineNumber] = useState('')
+  const [regulerSearchMethod, setRegulerSearchMethod] = useState<'engine' | 'plate' | null>(null)
+  const [regulerPlateNumber, setRegulerPlateNumber] = useState('')
+  const [regulerDriverName, setRegulerDriverName] = useState('')
+  const [showRegulerSearchNotFound, setShowRegulerSearchNotFound] = useState(false)
+  const [activeQueueType, setActiveQueueType] = useState<'booking' | 'reguler' | 'pitExpress'>('booking')
+
+  const queueNumbers = {
+    booking: 'B001',
+    reguler: 'R001',
+    pitExpress: 'P001'
+  }
+
+  const activeQueueNumber = queueNumbers[activeQueueType]
+
+  const openRegulerBookingDetail = () => {
+    setActiveQueueType('reguler')
+    setShowRegulerPopup(false)
+    setShowRegulerQrScan(false)
+    setShowRegulerEngineInput(false)
+    setRegulerSearchMethod(null)
+    setShowRegulerSearchNotFound(false)
+    setRegulerEngineNumber('')
+    setRegulerPlateNumber('')
+    setRegulerDriverName('')
+    setShowBookingPopup(true)
+    setShowBookingCodeInput(false)
+    setShowPhoneNumberInput(false)
+    setShowBookingDetail(true)
+    setShowBookingNotFound(false)
+    setShowQueueNumberPopup(false)
+    setBookingCode('')
+    setBookingCodeError('')
+  }
 
   const translations = {
     id: {
@@ -130,6 +163,7 @@ export default function NMSQueueUI() {
               key={item.id}
               onClick={() => {
                 if (item.id === 'booking') {
+                  setActiveQueueType('booking')
                   setShowBookingPopup(true)
                   setShowRegulerPopup(false)
                   setShowBookingCodeInput(false)
@@ -142,10 +176,19 @@ export default function NMSQueueUI() {
                 }
 
                 if (item.id === 'reguler') {
+                  setActiveQueueType('reguler')
                   setShowRegulerPopup(true)
                   setShowRegulerQrScan(false)
                   setShowRegulerEngineInput(false)
+                  setRegulerSearchMethod(null)
+                  setShowRegulerSearchNotFound(false)
                   setRegulerEngineNumber('')
+                  setRegulerPlateNumber('')
+                  setRegulerDriverName('')
+                }
+
+                if (item.id === 'pit') {
+                  setActiveQueueType('pitExpress')
                 }
               }}
               className="group relative w-[290px] h-[340px] rounded-[40px] bg-white shadow-xl cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl hover:border-orange-400 hover:bg-orange-500 border border-gray-200"
@@ -488,15 +531,17 @@ export default function NMSQueueUI() {
                 </div>
 
                 <div className="space-y-5 mb-10">
-                  <div className="grid grid-cols-2 gap-5">
-                    <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5">
-                      <div className="text-sm text-gray-500 mb-2">
-                        {language === 'id' ? 'Kode Booking' : 'Booking Code'}
+                  <div className={activeQueueType === 'booking' ? 'grid grid-cols-2 gap-5' : 'grid grid-cols-1 gap-5'}>
+                    {activeQueueType === 'booking' && (
+                      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5">
+                        <div className="text-sm text-gray-500 mb-2">
+                          {language === 'id' ? 'Kode Booking' : 'Booking Code'}
+                        </div>
+                        <div className="text-xl font-black text-gray-700">
+                          A12
+                        </div>
                       </div>
-                      <div className="text-xl font-black text-gray-700">
-                        A12
-                      </div>
-                    </div>
+                    )}
 
                     <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5">
                       <div className="text-sm text-gray-500 mb-2">
@@ -539,10 +584,14 @@ export default function NMSQueueUI() {
                 <div className="flex items-center justify-center gap-5">
                   <button
                     onClick={() => {
-                    setShowBookingDetail(false)
-                    setBookingCode('')
-                    setBookingCodeError('')
-                  }}
+                      setShowBookingDetail(false)
+                      setBookingCode('')
+                      setBookingCodeError('')
+
+                      if (activeQueueType === 'reguler') {
+                        setShowBookingPopup(false)
+                      }
+                    }}
                     className="px-8 py-4 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-all"
                   >
                     {language === 'id' ? 'Kembali' : 'Back'}
@@ -657,7 +706,7 @@ export default function NMSQueueUI() {
 
                   <div className="bg-orange-500 rounded-[40px] py-10 px-8 shadow-2xl mb-10">
                     <div className="text-white text-8xl font-black tracking-[8px]">
-                      B-011
+                      {activeQueueNumber}
                     </div>
                   </div>
 
@@ -689,6 +738,11 @@ export default function NMSQueueUI() {
                         setShowBookingCodeInput(false)
                         setShowBookingDetail(false)
                         setShowBookingNotFound(false)
+                        setRegulerSearchMethod(null)
+                        setShowRegulerSearchNotFound(false)
+                        setRegulerEngineNumber('')
+                        setRegulerPlateNumber('')
+                        setRegulerDriverName('')
                         setBookingCode('')
                         setBookingCodeError('')
                       }}
@@ -713,7 +767,11 @@ export default function NMSQueueUI() {
                   setShowRegulerPopup(false)
                   setShowRegulerQrScan(false)
                   setShowRegulerEngineInput(false)
+                  setRegulerSearchMethod(null)
+                  setShowRegulerSearchNotFound(false)
                   setRegulerEngineNumber('')
+                  setRegulerPlateNumber('')
+                  setRegulerDriverName('')
                 }}
                 className="absolute top-5 right-5 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-all text-gray-500 text-xl font-bold"
               >
@@ -753,7 +811,14 @@ export default function NMSQueueUI() {
                     </div>
 
                     <div
-                      onClick={() => setShowRegulerEngineInput(true)}
+                      onClick={() => {
+                        setShowRegulerEngineInput(true)
+                        setRegulerSearchMethod(null)
+                        setShowRegulerSearchNotFound(false)
+                        setRegulerEngineNumber('')
+                        setRegulerPlateNumber('')
+                        setRegulerDriverName('')
+                      }}
                       className="group cursor-pointer border border-gray-200 rounded-[28px] p-8 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
                     >
                       <div className="flex flex-col items-center text-center">
@@ -762,11 +827,11 @@ export default function NMSQueueUI() {
                         </div>
 
                         <div className="text-2xl font-black text-gray-700 group-hover:text-white mb-3 transition-all">
-                          Nomor Mesin
+                          No. Mesin / No. Polisi
                         </div>
 
                         <div className="text-sm text-gray-500 group-hover:text-orange-100 leading-relaxed transition-all">
-                          Input nomor mesin kendaraan pelanggan
+                          Input nomor mesin atau nomor polisi kendaraan pelanggan
                         </div>
                       </div>
                     </div>
@@ -788,9 +853,15 @@ export default function NMSQueueUI() {
 
                   <div className="bg-gray-50 border border-gray-200 rounded-[28px] p-10 mb-8 text-center">
                     <div className="text-8xl mb-4">▣</div>
-                    <div className="text-gray-500 font-semibold">
+                    <div className="text-gray-500 font-semibold mb-6">
                       Area Scan QR Unit
                     </div>
+                    <button
+                      onClick={openRegulerBookingDetail}
+                      className="px-8 py-4 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg transition-all"
+                    >
+                      Scan QR Unit
+                    </button>
                   </div>
 
                   <div className="flex items-center justify-center gap-5">
@@ -802,41 +873,180 @@ export default function NMSQueueUI() {
                     </button>
                   </div>
                 </div>
-              ) : (
+              ) : regulerSearchMethod === null ? (
                 <div className="max-w-xl mx-auto w-full">
-                  <div className="text-center mb-8">
-                    <div className="text-7xl mb-5">🔢</div>
+                  <div className="text-center mb-10">
+                    <div className="text-7xl mb-5">🔎</div>
 
                     <div className="text-3xl font-black text-gray-700 mb-3">
-                      Input Nomor Mesin
+                      Pilih Metode Pencarian Kendaraan
                     </div>
 
                     <div className="text-gray-500 text-lg leading-relaxed">
-                      Masukkan nomor mesin kendaraan pelanggan
+                      Silakan pilih metode pencarian data kendaraan pelanggan
                     </div>
                   </div>
 
-                  <div className="mb-8">
-                    <input
-                      value={regulerEngineNumber}
-                      onChange={(e) => setRegulerEngineNumber(e.target.value.toUpperCase())}
-                      type="text"
-                      maxLength={15}
-                      placeholder="Contoh: JM81E1234567"
-                      className="w-full h-16 rounded-2xl border border-gray-300 px-6 text-2xl font-bold tracking-[4px] text-center focus:outline-none focus:ring-4 focus:ring-orange-200 focus:border-orange-500 transition-all uppercase"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div
+                      onClick={() => {
+                        setRegulerSearchMethod('engine')
+                        setShowRegulerSearchNotFound(false)
+                        setRegulerEngineNumber('')
+                        setRegulerDriverName('')
+                      }}
+                      className="group cursor-pointer border border-gray-200 rounded-[28px] p-8 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                    >
+                      <div className="flex flex-col items-center text-center">
+                        <div className="text-7xl mb-6 transition-all duration-300 group-hover:scale-110">
+                          🔢
+                        </div>
+
+                        <div className="text-2xl font-black text-gray-700 group-hover:text-white mb-3 transition-all">
+                          Nomor Mesin
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => {
+                        setRegulerSearchMethod('plate')
+                        setShowRegulerSearchNotFound(false)
+                        setRegulerPlateNumber('')
+                        setRegulerDriverName('')
+                      }}
+                      className="group cursor-pointer border border-gray-200 rounded-[28px] p-8 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                    >
+                      <div className="flex flex-col items-center text-center">
+                        <div className="text-7xl mb-6 transition-all duration-300 group-hover:scale-110">
+                          🪪
+                        </div>
+
+                        <div className="text-2xl font-black text-gray-700 group-hover:text-white mb-3 transition-all">
+                          Nomor Polisi
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-center gap-5">
                     <button
                       onClick={() => {
                         setShowRegulerEngineInput(false)
-                        setRegulerEngineNumber('')
+                        setRegulerSearchMethod(null)
                       }}
                       className="px-8 py-4 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-all"
                     >
                       Kembali
                     </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="max-w-xl mx-auto w-full">
+                  <div className="text-center mb-8">
+                    <div className="text-7xl mb-5">{regulerSearchMethod === 'engine' ? '🔢' : '🪪'}</div>
+
+                    <div className="text-3xl font-black text-gray-700 mb-3">
+                      {regulerSearchMethod === 'engine' ? 'Input Nomor Mesin' : 'Input Nomor Polisi'}
+                    </div>
+
+                    <div className="text-gray-500 text-lg leading-relaxed">
+                      {regulerSearchMethod === 'engine'
+                        ? 'Masukkan nomor mesin kendaraan pelanggan.'
+                        : 'Masukkan nomor polisi kendaraan pelanggan.'}
+                    </div>
+                  </div>
+
+                  <div className="mb-8">
+                    <input
+                      value={regulerSearchMethod === 'engine' ? regulerEngineNumber : regulerPlateNumber}
+                      onChange={(e) => {
+                        const value = e.target.value.toUpperCase()
+
+                        if (regulerSearchMethod === 'engine') {
+                          setRegulerEngineNumber(value)
+                        } else {
+                          setRegulerPlateNumber(value.replace(/\s/g, ''))
+                        }
+
+                        setShowRegulerSearchNotFound(false)
+                        setRegulerDriverName('')
+                      }}
+                      type="text"
+                      maxLength={regulerSearchMethod === 'engine' ? 15 : undefined}
+                      placeholder={regulerSearchMethod === 'engine' ? 'CONTOH : JM81E1234567' : 'CONTOH : L7827UI'}
+                      className="w-full h-16 rounded-2xl border border-gray-300 px-6 text-2xl font-bold tracking-[4px] text-center focus:outline-none focus:ring-4 focus:ring-orange-200 focus:border-orange-500 transition-all uppercase"
+                    />
+                  </div>
+
+                  {regulerSearchMethod === 'plate' && (
+                    <div className="mb-6 text-center">
+                      <div className="inline-flex items-center gap-2 bg-orange-50 border border-orange-200 text-orange-500 px-5 py-3 rounded-2xl font-semibold text-sm">
+                        ℹ️ Data yang diinput harus tanpa spasi
+                      </div>
+                    </div>
+                  )}
+
+                  {showRegulerSearchNotFound && (
+                    <div className="mb-8">
+                      <div className="mb-5 text-center">
+                        <div className="inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-500 px-5 py-3 rounded-2xl font-semibold text-sm">
+                          ⚠️ Data tidak ditemukan
+                        </div>
+                      </div>
+
+                      <label className="block text-sm text-gray-500 mb-2 font-semibold">
+                        Nama Pembawa
+                      </label>
+                      <input
+                        value={regulerDriverName}
+                        onChange={(e) => setRegulerDriverName(e.target.value)}
+                        type="text"
+                        placeholder="Masukkan nama pembawa kendaraan"
+                        className="w-full h-16 rounded-2xl border border-gray-300 px-6 text-xl font-bold focus:outline-none focus:ring-4 focus:ring-orange-200 focus:border-orange-500 transition-all"
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-center gap-5">
+                    <button
+                      onClick={() => {
+                        setRegulerSearchMethod(null)
+                        setShowRegulerSearchNotFound(false)
+                        setRegulerEngineNumber('')
+                        setRegulerPlateNumber('')
+                        setRegulerDriverName('')
+                      }}
+                      className="px-8 py-4 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-all"
+                    >
+                      Kembali
+                    </button>
+
+                    {showRegulerSearchNotFound && regulerDriverName.trim() ? (
+                      <button
+                        onClick={openRegulerBookingDetail}
+                        className="px-8 py-4 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg transition-all"
+                      >
+                        Lanjutkan
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          const isEngineFound = regulerSearchMethod === 'engine' && regulerEngineNumber === 'JM81E1234567'
+                          const isPlateFound = regulerSearchMethod === 'plate' && regulerPlateNumber === 'L7827UI'
+
+                          if (isEngineFound || isPlateFound) {
+                            openRegulerBookingDetail()
+                            return
+                          }
+
+                          setShowRegulerSearchNotFound(true)
+                        }}
+                        className="px-8 py-4 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg transition-all"
+                      >
+                        Cari Data
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
